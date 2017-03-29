@@ -26,6 +26,7 @@ class AffiliateLinkUpd
 	private function includes()
 	{
 		include_once( 'classes/AffiliateUrl.php' );
+		include_once( 'classes/UrlTable.php' );
 		include_once( 'classes/Adapter/UrlAdapterInterface.php' );
 		include_once( 'classes/Adapter/UrlDatabase.php' );
 		include_once( 'classes/UrlUtils.php' );
@@ -48,7 +49,14 @@ class AffiliateLinkUpd
 	
 	public static function my_add_menu_items()
 	{
-		add_menu_page( 'Affiliation Link Tester', 'Affiliation Link Tester', 'activate_plugins', 'affiliate_link_tester', array('AffiliateLinkUpd', 'render_affiliate_link_tester'));
+		add_menu_page( 'Affiliation', 'Affiliation', 'activate_plugins', 'affiliate_menu', array('AffiliateLinkUpd', 'render_affiliate_home'));
+		add_submenu_page('affiliate_menu', 'Affiliate Link Tester', 'Link Tester', 'activate_plugins', 'affiliate_link_tester', array('AffiliateLinkUpd', 'render_affiliate_link_tester'));
+		add_submenu_page('affiliate_menu', 'Affiliate URL List', 'URL List', 'activate_plugins', 'affiliate_url_list', array('AffiliateLinkUpd', 'render_affiliate_url_list'));
+	}
+	
+	public static function render_affiliate_home()
+	{
+		self::render_affiliate_url_list();
 	}
 	
 	public static function render_affiliate_link_tester()
@@ -56,6 +64,38 @@ class AffiliateLinkUpd
 		$url = isset($_GET['url'])? $_GET['url']: null;
 		
 		self::showAffiliateLinkTesterForm($url);
+	}
+	
+	public static function render_affiliate_url_list()
+	{
+		// check action : edit / delete / add
+		$action = isset($_GET['action'])? $_GET['action']: null;
+		$show_list = true;
+		$id = isset($_GET['id'])? (int)$_GET['id']: 0;
+		
+		switch ($action)
+		{
+			case 'export':
+				self::exportFile();
+				$show_list = false;
+				break;
+		}
+		
+		if ($show_list)
+			self::showURLList();
+	}
+	
+	public static function showURLList()
+	{
+		$myListTable = new \affiliatelinkupd\UrlTable();
+		echo '<div class="wrap"><h2>Affiliate URL List<small> - <a href="'.admin_url( 'admin.php?page=affiliate_url_list&action=export' ).'">Export Data</a></small></h2>';
+		$myListTable->prepare_items();
+		echo '<form method="post">
+		<input type="hidden" name="page" value="affiliate_url_list" />';
+		$myListTable->search_box('Recherche', 'search_id');
+		echo '</form>';
+		$myListTable->display();
+		echo '</div>';
 	}
 	
 	public static function showAffiliateLinkTesterForm($url = "")
