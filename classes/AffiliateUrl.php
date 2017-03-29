@@ -11,35 +11,44 @@ class AffiliateUrl
 	protected static $_ERROR_STATE = 0;
 	protected static $_VALID_STATE = 1;
 	
+	private $adapter;
+	
 	public $url;
 	public $convertedUrl;
 	
 	public $state;
 	
-	public function __construct($url)
+	public function __construct($url, Adapter\UrlAdapterInterface $adapter)
 	{
+		$this->adapter = $adapter;
 		$this->url = $url;
 	}
 	
 	public function convert()
 	{
-		// TODO : find a secure solution
-		$domain = \affiliatelinkupd\UrlUtils::get_domain_from_url($this->url);
-		
 		$url = $this->url;
 		if (!\affiliatelinkupd\UrlUtils::hasProtocol($url)) {
 			$url = 'http://' . $url;
 		}
 		
-		// var_dump(urldecode("http://clic.reussissonsensemble.fr/click.asp?ref=720439&site=14485&type=text&tnb=3&diurl=http%3A%2F%2Feultech.fnac.com%2Fdynclick%2Ffnac%2F%3Feseg-name%3DaffilieID%26eseg-item%3D%24ref%24%26eaf-publisher%3DAFFILINET%26eaf-name%3DGenerateur_liens%26eaf-creative%3D%24affmt%24%26eaf-creativetype%3D%24affmn%24%26eurl%3Dhttp%253A%252F%252Fwww.fnac.com%252F%253FOrigin%253Daffilinet%2524ref%2524"));
+		$clean_url = $url;
+		if (($pos = strpos($clean_url, '#')) !== false) {
+			$clean_url = substr($clean_url, 0, $pos);
+		}
 		
-		var_dump($url, $domain);
-		
+		// TODO : find a secure solution
+		$domain = \affiliatelinkupd\UrlUtils::get_domain_from_url($clean_url);
+var_dump($domain);
+
 		$this->state = self::$_VALID_STATE;
 		switch ($domain)
 		{
 			case 'www.fnac.com': case 'fnac.com':
-				$new_url = \affiliatelinkupd\UrlUtils::add_params_to_url($url, array('Origin' => 'affilinet720439', 'ectrans' => 1));
+			
+				$base_url = "http://clic.reussissonsensemble.fr/click.asp?ref=720439&site=14485&type=text&tnb=3&diurl=http%3A%2F%2Feultech.fnac.com%2Fdynclick%2Ffnac%2F%3Feseg-name%3DaffilieID%26eseg-item%3D%24ref%24%26eaf-publisher%3DAFFILINET%26eaf-name%3DGenerateur_liens%26eaf-creative%3D%24affmt%24%26eaf-creativetype%3D%24affmn%24%26eurl%3D";
+			
+				$url = \affiliatelinkupd\UrlUtils::add_params_to_url($clean_url, array('Origin' => 'affilinet720439'/*, 'ectrans' => 1*/));
+				$new_url = $base_url . urlencode($url);
 				break;
 			case 'www.grosbill.com': case 'grosbill.com':
 				// https://www.grosbill.com/?utm_source=affilinet&utm_medium=cpa&utm_campaign=grosbill-moteurliens&ectrans=1#siteaffilinet
@@ -60,10 +69,13 @@ class AffiliateUrl
 	
 	protected function saveConvertion($new_url)
 	{
-		//if ($this->isError())
-		{
-			// TODO : save in DB
-		}
+		$data = array(
+			'url' => $this->url,
+			'state' => $this->state,
+			'url_output' => $new_url,
+		);
+		
+		return $this->adapter->insert($data);
 	}
 	
 	public function isLoaded()

@@ -26,17 +26,20 @@ class AffiliateLinkUpd
 	private function includes()
 	{
 		include_once( 'classes/AffiliateUrl.php' );
+		include_once( 'classes/Adapter/UrlAdapterInterface.php' );
+		include_once( 'classes/Adapter/UrlDatabase.php' );
 		include_once( 'classes/UrlUtils.php' );
 	}
 	
 	public static function activate()
 	{
-		
+		// Install SQL Table
+		\affiliatelinkupd\Adapter\UrlDatabase::install();
 	}
 	
 	public static function deactivate()
 	{
-		
+		\affiliatelinkupd\Adapter\UrlDatabase::uninstall();
 	}
 	
 	/**
@@ -57,7 +60,8 @@ class AffiliateLinkUpd
 	
 	public static function showAffiliateLinkTesterForm($url = "")
 	{	
-		$url = new \affiliatelinkupd\AffiliateUrl($url);
+		$adapter = new \affiliatelinkupd\Adapter\UrlDatabase();
+		$url = new \affiliatelinkupd\AffiliateUrl($url, $adapter);
 	
 		// if this fails, check_admin_referer() will automatically print a "failed" page and die.
 		$new_url = null;
