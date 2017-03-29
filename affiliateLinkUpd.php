@@ -49,7 +49,7 @@ class AffiliateLinkUpd
 	
 	public static function my_add_menu_items()
 	{
-		add_menu_page( 'Affiliation', 'Affiliation', 'activate_plugins', 'affiliate_menu', array('AffiliateLinkUpd', 'render_affiliate_home'));
+		add_menu_page( 'Affiliation', 'Affiliation', 'activate_plugins', 'affiliate_menu', array('AffiliateLinkUpd', 'render_affiliate_home'), 'dashicons-migrate');
 		add_submenu_page('affiliate_menu', 'Affiliate Link Tester', 'Link Tester', 'activate_plugins', 'affiliate_link_tester', array('AffiliateLinkUpd', 'render_affiliate_link_tester'));
 		add_submenu_page('affiliate_menu', 'Affiliate URL List', 'URL List', 'activate_plugins', 'affiliate_url_list', array('AffiliateLinkUpd', 'render_affiliate_url_list'));
 	}

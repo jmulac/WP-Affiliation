@@ -23,7 +23,8 @@ class UrlDatabase implements UrlAdapterInterface
 		id int(9) NOT NULL AUTO_INCREMENT,
 		url text NOT NULL,
 		url_output text DEFAULT '' NOT NULL,
-		state  smallint(2) NOT NULL,
+		state smallint(2) NOT NULL,
+		post_id int(9) DEFAULT 0 NOT NULL,
 		date_add datetime NULL DEFAULT NULL,
 		PRIMARY KEY  (id)
 		) $charset_collate;";
@@ -107,11 +108,12 @@ class UrlDatabase implements UrlAdapterInterface
 		$sql_data = array(
 			'url' => $data['url'],
 			'url_output' => isset($data['url_output'])? $data['url_output']: "",
+			'post_id' => isset($data['post_id'])? $data['post_id']: "",
 			'date_add' => date('Y-m-d H:i:s'),
 			'state' => $data['state'],
 		);
 		
-		$inserted = $wpdb->insert($table_name, $sql_data, array('%s', '%s', '%s', '%d'));
+		$inserted = $wpdb->insert($table_name, $sql_data, array('%s', '%s', '%d', '%s', '%d'));
 		return $inserted !== false;
 	}
 	

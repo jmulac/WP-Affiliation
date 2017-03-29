@@ -20,6 +20,7 @@ class UrlTable extends \WP_List_Table
     		'url' 			=> 'URL',
     		'url_output'	=> 'Output URL',
   			'state' 		=> 'State',
+			'post_id' 			=> 'Post',
   			'date_add'		=> 'Date Add',
   		);
   		
@@ -71,12 +72,21 @@ class UrlTable extends \WP_List_Table
 	{
 		$sortable_columns = array(
 			'url'  => array('url', true),
-			'url_output' => array('url_output',false),
+			'url_output' => array('url_output',true),
 			'state'   => array('state',false),
+			'post_id'   => array('post_id',false),
 			'date_add'   => array('date_add', false),
 		);
 		
 		return $sortable_columns;
+	}
+	
+	public function column_post_id($item)
+	{
+		if (isset($item['post_id']) && $item['post_id'] > 0)
+			return $item['post_id'];
+		else 
+			return "- [URL Tester]";
 	}
 	
 	public function column_url($item)
