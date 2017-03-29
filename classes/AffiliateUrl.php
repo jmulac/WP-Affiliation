@@ -44,16 +44,17 @@ var_dump($domain);
 		switch ($domain)
 		{
 			case 'www.fnac.com': case 'fnac.com':
-			
 				$base_url = "http://clic.reussissonsensemble.fr/click.asp?ref=720439&site=14485&type=text&tnb=3&diurl=http%3A%2F%2Feultech.fnac.com%2Fdynclick%2Ffnac%2F%3Feseg-name%3DaffilieID%26eseg-item%3D%24ref%24%26eaf-publisher%3DAFFILINET%26eaf-name%3DGenerateur_liens%26eaf-creative%3D%24affmt%24%26eaf-creativetype%3D%24affmn%24%26eurl%3D";
-			
 				$url = \affiliatelinkupd\UrlUtils::add_params_to_url($clean_url, array('Origin' => 'affilinet720439'/*, 'ectrans' => 1*/));
 				$new_url = $base_url . urlencode($url);
 				break;
 			case 'www.grosbill.com': case 'grosbill.com':
-				// https://www.grosbill.com/?utm_source=affilinet&utm_medium=cpa&utm_campaign=grosbill-moteurliens&ectrans=1#siteaffilinet
-				// TODO : add #
-				$new_url = \affiliatelinkupd\UrlUtils::add_params_to_url($url, array('utm_source' => 'affilinet', 'utm_medium' => 'cpa', 'utm_campaign' => 'grosbill-moteurliens', 'ectrans' => 1));
+				$base_url = "http://clic.reussissonsensemble.fr/click.asp?ref=720439&site=6387&type=text&tnb=30&diurl=http%3A%2F%2Feulerian.grosbill.com%2Fdynclick%2Fgrosbill%2F%3Feaf-publisher%3Daffilinet%26eaf-name%3Dgrosbill-logo%26eaf-creative%3D120x60%26eaf-creativetype%3D%24ref%24%26eurl%3D";
+				$url = \affiliatelinkupd\UrlUtils::add_params_to_url($clean_url, array('utm_source' => 'affilinet', 'utm_medium' => 'cpa', 'utm_campaign' => 'grosbill-moteurliens'/*, 'ectrans' => 1*/));
+				$new_url = $base_url . urlencode($url) . '#siteaffilinet';
+				break;
+			case 'www.cdiscount.com': case 'cdiscount.com':
+				$new_url = "https://ad.zanox.com/ppc/?36429178C54756398&ulp=[[".urlencode($clean_url)."?refer=zanoxpb&cid=affil&cm_mmc=zanoxpb-_-userid]]";
 				break;
 			default:
 				$this->state = self::$_ERROR_STATE;
