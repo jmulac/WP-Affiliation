@@ -100,7 +100,7 @@ class UrlTable extends \WP_List_Table
 	public function column_url_output($item)
 	{
 		if (!empty($item['url_output']))
-			return '<a target="_blank" href="'.$item['url_output'].'">' . $item['url_output'] . '</a>';
+			return '<a target="_blank" href="'.$item['url_output'].'" title="'.$item['url_output'].'">' . StringUtils::cut_string($item['url_output'], 150) . '</a>';
 		else 
 			return "";
 	}

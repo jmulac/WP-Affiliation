@@ -60,6 +60,11 @@ var_dump($domain);
 				// Link ID ?
 				$base_url = "https://www.amazon.fr//ref=as_li_ss_tl?ie=UTF8&linkCode=ll2&tag=choc0e-21&linkId=e975064ea5a3cefd29ccded6f0363778";
 				break;
+			case 'www.instant-gaming.com': case 'instant-gaming.com':
+			// http://stackoverflow.com/questions/4937478/strip-off-url-parameter-with-php
+				$new_url = \affiliatelinkupd\UrlUtils::add_params_to_url($clean_url, array('igr' => 'gamer-abaaf0'));
+			
+				break,
 			default:
 				$this->state = self::$_ERROR_STATE;
 				$new_url = $url;

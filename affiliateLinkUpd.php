@@ -29,7 +29,9 @@ class AffiliateLinkUpd
 		include_once( 'classes/UrlTable.php' );
 		include_once( 'classes/Adapter/UrlAdapterInterface.php' );
 		include_once( 'classes/Adapter/UrlDatabase.php' );
+		
 		include_once( 'classes/UrlUtils.php' );
+		include_once( 'classes/StringUtils.php' );
 	}
 	
 	public static function activate()
